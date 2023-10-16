@@ -26,7 +26,9 @@ require('../../../config.php');    /// required for all Moodle functionalities
 require_once($CFG->libdir.'/csvlib.class.php');   /// required to handle CSV functions
 require_once($CFG->libdir."/moodlelib.php");
 
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/form.php');  // to load upload form
+// to load upload form
+require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/form.php');  
+
 // make sure user is logined and has permission to change
 require_login();
 $systemcontext   = context_system::instance(); 
@@ -40,20 +42,21 @@ if ($USER->id) {
 
 }  else { throw new \moodle_exception('usernotavailable') ;}
 
-
-
-// set the url of the page
-$returnurl = new moodle_url('/admin/tool/resetpasswords/index.php');
+/// start building page content
 
 ///   Page Header
+$PAGE->set_title(get_string('pluginname', 'tool_resetpasswords'));
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('uploadusers', 'tool_resetpasswords'));
+echo $OUTPUT->heading(get_string('pluginname', 'tool_resetpasswords'));
 
-
+// set the url of the page for continue button
+$returnurl = new moodle_url('/admin/tool/resetpasswords/index.php');
+// check if the user already sent file or not
 $iid         = optional_param('iid', '', PARAM_INT);
 
 
-if (empty($iid)) { /// this is the first load to page
+
+if (empty($iid)) { /// this is the first load to page or list is not handled yet 
     
 // intiate form object
  $mform1 = new upload_list_form();  
@@ -61,14 +64,13 @@ if (empty($iid)) { /// this is the first load to page
  if ($formdata = $mform1->get_data()) {   
         $iid = csv_import_reader::get_new_iid('uploaduser');
         $cir = new csv_import_reader($iid, 'uploaduser');
-
         $content = $mform1->get_file_content('userfile');
+
 //  bool false if error, count of data lines if ok; use get_error() to get error string
         $readcount = $cir->load_csv_content($content, $formdata->encoding, $formdata->delimiter_name);
-      //  echo json_encode($readcount);
         $csvloaderror = $cir->get_error();
         unset($content);
-
+        // throw error if csv file is empty
         if (!is_null($csvloaderror)) {
             throw new \moodle_exception('csvloaderror', '', $returnurl, $csvloaderror);
         }
@@ -80,7 +82,7 @@ if (empty($iid)) { /// this is the first load to page
         echo $OUTPUT->footer();
         die;
     }
-} else {
+} else {  
    $cir = new csv_import_reader($iid, 'uploaduser');
 }
 
@@ -89,7 +91,6 @@ if (empty($iid)) { /// this is the first load to page
 
 
 // 1) Test if columns are ok.
-
  
 $filecolumns =$cir->get_columns();
 
@@ -114,44 +115,43 @@ echo '<table    class="generaltable boxaligncenter flexible-wrap" summary="'.get
         echo '<th class="header" scope="col"> Action </th>';
         echo '</tr>';
  
-// make the 
+
 global $DB ;
 $generated = 0 ;   // counter for number of processed data
-$escaped = 0;   // counter for number of escaper data
+$escaped = 0;   // counter for number of escaped data
 $emailsubject = get_string('emailsubject','tool_resetpasswords');
+$emailsender = get_string('emailsender','tool_resetpasswords',['siteshortname' => $SITE->shortname]); 
 
-
+/// loop csv filr rows
 for ($i=0; $i<$readcount-1; $i++){
    $usernames = $cir-> next(); 
      echo '<tr class="r0">';
      echo '<td scope="col">'. $usernames[0] . '</td>';
-        $cuser =    get_complete_user_data('username', $usernames[0]);
+      $cuser =    get_complete_user_data('username', $usernames[0]);
          
       if($cuser){  // the user found
         $password =generate_password(10) ; 
         $cuser->password = $password ;
         user_update_user($cuser , true);
 
-
-          $mailbody =  $OUTPUT->render_from_template('tool_resetpasswords/mail',[
-            'name' => $cuser->firstname . " " . $cuser->lastname,
-            'username'=> $cuser->username,
-            'password' => $password,
-            'URL' => $CFG->wwwroot 
+        // prepare mail
+        $mailbody =  get_string('emailbodyhtml','tool_resetpasswords',[
+        'userfullname' => $cuser->firstname . ' ' . $cuser->lastname ,
+        'username'=> $cuser->username,
+        'password' => $password,
+        'URL' => $CFG->wwwroot . '/login/index.php',
+        'sitename' => $SITE->fullname
           ]); 
-     
-       
-       //   echo $mailbody;
+    
+   email_to_user($cuser, $emailsender, $emailsubject, "", $mailbody);
 
-   email_to_user($cuser, "wafaa moodle", "inline email", "this is message", $mailbody);
-
-     //     set_user_preference('create_password',1, $cuser);
+     // Force password change
      set_user_preference('auth_forcepasswordchange',1, $cuser);
      
           echo '<td scope="col"> Password is generated sent by mail </td>';
           $generated ++;
   
-   }  else {
+   }  else {  // user not found
     echo '<td scope="col"> User not found </td>'; 
     $escaped ++;
    }   
@@ -164,7 +164,6 @@ Escaped users: $escaped <br/>
 Total : ".($generated+$escaped)."
 </div>";
  
-
 echo $OUTPUT->continue_button($returnurl);
 
 echo $OUTPUT->footer();

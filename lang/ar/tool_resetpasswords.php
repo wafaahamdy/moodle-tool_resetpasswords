@@ -25,11 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Bulk rest password';
+$string['pluginname'] = 'نغيير كلمة السر لمجموعة';
 $string['uploadusers'] = 'قم برفع الملف الخاص بالمستخدمين';
 $string['resetpasswords'] = 'إعادة تعيين كلمة المرور';
 $string['resetpasswords:bulkresetpassword'] = "Bulk reset password by CSV file upload" ;
 $string['examplecsv'] = "ملف كمثال" ;
 $string['examplecsv_help'] = "Upload CSV file with only on column for <b>username</b>, as found in this example file" ;
 $string['csvdelimiter'] = "CSV separator" ;
-$string['encoding'] = "Encoding" ;
+$string['encoding'] = "التشفير" ;

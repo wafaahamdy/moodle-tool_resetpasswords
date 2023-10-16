@@ -26,6 +26,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Bulk rest password';
+
+// form Strings
 $string['uploadusers'] = 'Bulk Reset Password';
 $string['resetpasswords'] = 'Reset Passwords';
 $string['resetpasswords:bulkresetpassword'] = "Bulk reset password by CSV file upload" ;
@@ -33,4 +35,16 @@ $string['examplecsv'] = "Example CSV" ;
 $string['examplecsv_help'] = "Upload CSV file with only on column for <b>username</b>, as found in this example file" ;
 $string['csvdelimiter'] = "CSV separator" ;
 $string['encoding'] = "Encoding" ;
-$string['emailsubject'] = "Moodle Account Password" ;
+
+/// Email Strings
+$string['emailsubject'] = 'User account password reset';
+$string['emailsender'] = '{$a->siteshortname} Site Admin' ;
+$string['emailbodyhtml'] ='<div> Hi {$a->userfullname} , <br/>
+Your user account password at <b> {$a->sitename} </b> has been reset by admin.
+<br/> Your current login information is now:
+<br/><br/>
+Username: {$a->username} <br/>
+Password: {$a->password} <br/><br/>
+URL: {$a->URL}
+</div>' ;
+
