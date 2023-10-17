@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Bulk rest password';
+$string['taskname'] = 'Bulk rest password';
 
 // form Strings
 $string['uploadusers'] = 'Bulk Reset Password';
