@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,20 +12,25 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Sync bulk reset password task  task
- * * @package     tool_resetpasswords
+ * Plugin version and other meta-data are defined here.
+ *
+ * @package     tool_resetpasswords
  * @copyright   2023 Wafaa Hamdy <eng.wafaa.hamdy@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+ // this is a class to add scheduled task functionality for the process
+
+ // we should add a namaspace related to the plugin
 
 namespace tool_resetpasswords\task ;
 
 defined('MOODLE_INTERNAL') || die();
  
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/lib.php');  
+require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/lib.php');   // required for restand email function
 
 class bulkreset_passwords extends \core\task\scheduled_task {
 
@@ -44,13 +49,14 @@ class bulkreset_passwords extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
           // Generate password and send email for users 
-          // check for users that needs password reset 
+          // check for users that needs password reset those who have preference bulk_resetpassword =1
           if ($DB->count_records('user_preferences', array('name' => 'bulk_resetpassword', 'value' => '1'))) {
             mtrace('Creating passwords for new users...');
             
 
             $userfieldsapi = \core_user\fields::for_name();
             $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
+            // retrieve users data that should include username, email, id 
             $cusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, 
                                                      $usernamefields, u.username
                                                 FROM {user} u
@@ -60,9 +66,9 @@ class bulkreset_passwords extends \core\task\scheduled_task {
                                                      u.auth != 'nologin' AND u.deleted = 0");
 
                foreach ($cusers as $cuser) {
-                resetPassword_sendmail($cuser);  
-      
-           }
+                // this function in lib file
+                reset_password_sendmail($cuser);  
+                }
             $cusers->close();
         }else{
           mtrace('No bulk password reset is needed!');

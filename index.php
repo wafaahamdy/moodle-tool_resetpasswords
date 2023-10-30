@@ -24,25 +24,26 @@
 
 require('../../../config.php');    /// required for all Moodle functionalities
 require_once($CFG->libdir.'/csvlib.class.php');   /// required to handle CSV functions
-require_once($CFG->libdir."/moodlelib.php");
+require_once($CFG->libdir."/moodlelib.php");  // load main Moodle functionalities
  
-
-
 // to load upload form
 require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/form.php');  
 
 // make sure user is logined and has permission to change
 require_login();
-$systemcontext   = context_system::instance(); 
+// check user has permission to access this page and it should be accessed from system context
+$systemcontext = context_system::instance(); 
 // Check access control.
-if ($USER->id) {
+if ($USER->id) {  // user data could be retrieved
     echo ($USER->id) ;
+    // canbility is added in db/access file and could be granted from defire roles
     //  require_login() MUST NOT be used here, it would result in infinite loop!
     if (!has_capability('tool/resetpasswords:bulkresetpassword', $systemcontext)) {
-        throw new \moodle_exception('accessdenied', 'admin');
-      }
-
-}  else { throw new \moodle_exception('usernotavailable') ;}
+      throw new \moodle_exception('accessdenied', 'admin');
+    }
+}  else {  // no valid user is logined 
+     throw new \moodle_exception('usernotavailable') ;
+}
 
 /// start building page content
 
@@ -54,37 +55,34 @@ echo $OUTPUT->heading(get_string('pluginname', 'tool_resetpasswords'));
 // set the url of the page for continue button
 $returnurl = new moodle_url('/admin/tool/resetpasswords/index.php');
 // check if the user already sent file or not
-$iid         = optional_param('iid', '', PARAM_INT);
+$iid = optional_param('iid', '', PARAM_INT);
 
 
 
 if (empty($iid)) { /// this is the first load to page or list is not handled yet 
+    // intiate form object
+    $mform1 = new upload_list_form();  
     
-// intiate form object
- $mform1 = new upload_list_form();  
- 
- if ($formdata = $mform1->get_data()) {   
-        $iid = csv_import_reader::get_new_iid('uploaduser');
+    if ($formdata = $mform1->get_data()) {   // the user already uploaded file 
+        $iid = csv_import_reader::get_new_iid('uploaduser'); 
         $cir = new csv_import_reader($iid, 'uploaduser');
         $content = $mform1->get_file_content('userfile');
 
-//  bool false if error, count of data lines if ok; use get_error() to get error string
+    //  bool false if error, count of data lines if ok; use get_error() to get error string
         $readcount = $cir->load_csv_content($content, $formdata->encoding, $formdata->delimiter_name);
         $csvloaderror = $cir->get_error();
         unset($content);
         // throw error if csv file is empty
         if (!is_null($csvloaderror)) {
             throw new \moodle_exception('csvloaderror', '', $returnurl, $csvloaderror);
-        }
-       
-
+        }           
     } else {
- // if no data is sent, just display the form
+     // if no data is sent, just display the form
         $mform1->display();
         echo $OUTPUT->footer();
         die;
     }
-} else {  
+} else {  // file is sent and interpretted
    $cir = new csv_import_reader($iid, 'uploaduser');
 }
 
@@ -95,27 +93,26 @@ if (empty($iid)) { /// this is the first load to page or list is not handled yet
 // 1) Test if columns are ok.
  
 $filecolumns =$cir->get_columns();
-
-    if (empty($filecolumns)) {
-        $cir->close();
-        $cir->cleanup();
-        throw new \moodle_exception('cannotreadtmpfile', 'error', $returnurl);
-    }
-    if (count($filecolumns) > 1 || !(in_array('username', $filecolumns)) )  {
-        $cir->close();
-        $cir->cleanup();
-        
-     throw new \moodle_exception('csvloaderror', 'error', $returnurl, 'Only one column with header username is allowed');
-    }
+if (empty($filecolumns)) {  // make sure this is not an empty file
+    $cir->close();
+    $cir->cleanup();
+    throw new \moodle_exception('cannotreadtmpfile', 'error', $returnurl);
+}
+    // make sure that only one column is added with username field
+if (count($filecolumns) > 1 || !(in_array('username', $filecolumns)) )  {
+    $cir->close();
+    $cir->cleanup();
+    throw new \moodle_exception('csvloaderror', 'error', $returnurl, 'Only one column with header username is allowed');
+}
 
 
 $dd = $cir-> init();
 
 echo '<table    class="generaltable boxaligncenter flexible-wrap" summary="'.get_string('uploadusersresult', 'tool_uploaduser').'">';
-        echo '<tr class="heading r0">';
-        echo '<th class="header" scope="col">'.$filecolumns[0].'</th>';
-        echo '<th class="header" scope="col">'. get_string('action', 'tool_resetpasswords') .'   </th>';
-        echo '</tr>';
+echo '<tr class="heading r0">';
+echo '<th class="header" scope="col">'.$filecolumns[0].'</th>';
+echo '<th class="header" scope="col">'. get_string('action', 'tool_resetpasswords') .'   </th>';
+echo '</tr>';
  
 
 global $DB ;
@@ -126,35 +123,27 @@ $escaped = 0;   // counter for number of escaped data
 /// loop csv filr rows
 for ($i=0; $i<$readcount-1; $i++){
    $usernames = $cir-> next(); 
-     echo '<tr class="r0">';
-     echo '<td scope="col">'. $usernames[0] . '</td>';
-      $cuser =    get_complete_user_data('username', $usernames[0]);
-         
-      if($cuser){  // the user found
+   echo '<tr class="r0">';
+   echo '<td scope="col">'. $usernames[0] . '</td>';
+   $cuser =    get_complete_user_data('username', $usernames[0]);   // retrieve user date
 
-        set_user_preference('bulk_resetpassword',1, $cuser);
-            echo '<td scope="col"> '. get_string('password_cron', 'tool_resetpasswords') .'   </td>';  
-          $generated ++;
-
+   if($cuser){  // the user found
+    // to identify user for later process we add a preference to him 
+     set_user_preference('bulk_resetpassword',1, $cuser);
+     echo '<td scope="col"> '. get_string('password_cron', 'tool_resetpasswords') .'   </td>';  
+     $generated ++;
    }  else {  // user not found
-    echo '<td scope="col">'. get_string('usernotfound', 'tool_resetpasswords') .' </td>'; 
-    $escaped ++;
+      echo '<td scope="col">'. get_string('usernotfound', 'tool_resetpasswords') .' </td>'; 
+      $escaped ++;
    }   
-echo '</tr>' ;
+  echo '</tr>' ;
 }
-echo "</table>" ;
-echo "<div>
-". get_string('reseted_users', 'tool_resetpasswords') .": $generated <br/>
-". get_string('escaped_users', 'tool_resetpasswords') .": $escaped <br/>
-". get_string('total', 'tool_resetpasswords') ." : ".($generated+$escaped)."
-</div>";
 
+echo "</table>" ; 
+// echo a summary report
+echo "<div> ". get_string('reseted_users', 'tool_resetpasswords') .": $generated <br/>"
+     . get_string('escaped_users', 'tool_resetpasswords') .": $escaped <br/>"
+     . get_string('total', 'tool_resetpasswords') ." : ".($generated+$escaped)."</div>";
 
-
-
- 
-
- 
- 
 echo $OUTPUT->continue_button($returnurl);
- echo $OUTPUT->footer();
+echo $OUTPUT->footer();
