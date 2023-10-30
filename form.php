@@ -33,7 +33,7 @@ class upload_list_form extends moodleform {
         $mform->addElement('header', 'settingsheader', get_string('upload'));
 
         $url = new moodle_url('example.csv');
-       $link = html_writer::link($url, 'example.csv');
+        $link = html_writer::link($url, 'example.csv');
         $mform->addElement('static', 'examplecsv', get_string('examplecsv', 'tool_resetpasswords'), $link);
         $mform->addHelpButton('examplecsv', 'examplecsv', 'tool_resetpasswords');
 

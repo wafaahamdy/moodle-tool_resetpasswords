@@ -24,6 +24,8 @@
 namespace tool_resetpasswords\task ;
 
 defined('MOODLE_INTERNAL') || die();
+ 
+require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/lib.php');  
 
 class bulkreset_passwords extends \core\task\scheduled_task {
 
@@ -40,8 +42,31 @@ class bulkreset_passwords extends \core\task\scheduled_task {
      * Run task for Bulk reset password.
      */
     public function execute() {
-     
-        mtrace('Creating passwords for bulk reset uploaded users ...');
+        global $DB;
+          // Generate password and send email for users 
+          // check for users that needs password reset 
+          if ($DB->count_records('user_preferences', array('name' => 'bulk_resetpassword', 'value' => '1'))) {
+            mtrace('Creating passwords for new users...');
+            
+
+            $userfieldsapi = \core_user\fields::for_name();
+            $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
+            $cusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, 
+                                                     $usernamefields, u.username
+                                                FROM {user} u
+                                                JOIN {user_preferences} p ON u.id=p.userid
+                                               WHERE p.name='bulk_resetpassword' AND p.value='1' AND
+                                                     u.email !='' AND u.suspended = 0 AND
+                                                     u.auth != 'nologin' AND u.deleted = 0");
+
+               foreach ($cusers as $cuser) {
+                resetPassword_sendmail($cuser);  
+      
+           }
+            $cusers->close();
+        }else{
+          mtrace('No bulk password reset is needed!');
+        }
 
     
     }

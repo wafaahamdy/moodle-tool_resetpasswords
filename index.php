@@ -119,8 +119,7 @@ echo '<table    class="generaltable boxaligncenter flexible-wrap" summary="'.get
 global $DB ;
 $generated = 0 ;   // counter for number of processed data
 $escaped = 0;   // counter for number of escaped data
-$emailsubject = get_string('emailsubject','tool_resetpasswords');
-$emailsender = get_string('emailsender','tool_resetpasswords',['siteshortname' => $SITE->shortname]); 
+
 
 /// loop csv filr rows
 for ($i=0; $i<$readcount-1; $i++){
@@ -130,25 +129,9 @@ for ($i=0; $i<$readcount-1; $i++){
       $cuser =    get_complete_user_data('username', $usernames[0]);
          
       if($cuser){  // the user found
-        $password =generate_password(10) ; 
-        $cuser->password = $password ;
-        user_update_user($cuser , true);
 
-        // prepare mail
-        $mailbody =  get_string('emailbodyhtml','tool_resetpasswords',[
-        'userfullname' => $cuser->firstname . ' ' . $cuser->lastname ,
-        'username'=> $cuser->username,
-        'password' => $password,
-        'URL' => $CFG->wwwroot . '/login/index.php',
-        'sitename' => $SITE->fullname
-          ]); 
-    
-   email_to_user($cuser, $emailsender, $emailsubject, "", $mailbody);
-
-     // Force password change
-     set_user_preference('auth_forcepasswordchange',1, $cuser);
-     
-          echo '<td scope="col"> Password is generated sent by mail </td>';
+        set_user_preference('bulk_resetpassword',1, $cuser);
+            echo '<td scope="col"> Password is generated in cron </td>';  
           $generated ++;
   
    }  else {  // user not found
@@ -166,4 +149,8 @@ Total : ".($generated+$escaped)."
  
 echo $OUTPUT->continue_button($returnurl);
 
+
 echo $OUTPUT->footer();
+
+
+ 
