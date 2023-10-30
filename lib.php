@@ -21,18 +21,18 @@
  * @copyright   2023 Wafaa Hamdy <eng.wafaa.hamdy@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
+ 
+ defined('MOODLE_INTERNAL') || die();
 
 // function that takes user object and makes reset 
 //user id, email and username must be included in user object.
 
 function resetPassword_sendmail($cuser){
-
-    global $DB;
-
+  global $SITE , $CFG , $DB;
+ 
 // Note: we can not send emails to suspended accounts.
     $emailsubject = get_string('emailsubject','tool_resetpasswords');
-    $emailsender = get_string('emailsender','tool_resetpasswords'); 
+    $emailsender = get_string('emailsender','tool_resetpasswords',['siteshortname'=>$SITE->shortname]); 
     $password =generate_password(10) ; 
     $cuser->password = $password ;
     user_update_user($cuser , true);
@@ -53,7 +53,7 @@ function resetPassword_sendmail($cuser){
 
   set_user_preference('auth_forcepasswordchange',1, $cuser);
   unset_user_preference('bulk_resetpassword', $cuser);
-
+ 
 }
 
  

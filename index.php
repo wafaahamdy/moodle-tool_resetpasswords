@@ -25,6 +25,8 @@
 require('../../../config.php');    /// required for all Moodle functionalities
 require_once($CFG->libdir.'/csvlib.class.php');   /// required to handle CSV functions
 require_once($CFG->libdir."/moodlelib.php");
+ 
+
 
 // to load upload form
 require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/form.php');  
@@ -112,7 +114,7 @@ $dd = $cir-> init();
 echo '<table    class="generaltable boxaligncenter flexible-wrap" summary="'.get_string('uploadusersresult', 'tool_uploaduser').'">';
         echo '<tr class="heading r0">';
         echo '<th class="header" scope="col">'.$filecolumns[0].'</th>';
-        echo '<th class="header" scope="col"> Action </th>';
+        echo '<th class="header" scope="col">'. get_string('action', 'tool_resetpasswords') .'   </th>';
         echo '</tr>';
  
 
@@ -131,26 +133,28 @@ for ($i=0; $i<$readcount-1; $i++){
       if($cuser){  // the user found
 
         set_user_preference('bulk_resetpassword',1, $cuser);
-            echo '<td scope="col"> Password is generated in cron </td>';  
+            echo '<td scope="col"> '. get_string('password_cron', 'tool_resetpasswords') .'   </td>';  
           $generated ++;
-  
+
    }  else {  // user not found
-    echo '<td scope="col"> User not found </td>'; 
+    echo '<td scope="col">'. get_string('usernotfound', 'tool_resetpasswords') .' </td>'; 
     $escaped ++;
    }   
 echo '</tr>' ;
 }
 echo "</table>" ;
 echo "<div>
-Password reseted users: $generated <br/>
-Escaped users: $escaped <br/>
-Total : ".($generated+$escaped)."
+". get_string('reseted_users', 'tool_resetpasswords') .": $generated <br/>
+". get_string('escaped_users', 'tool_resetpasswords') .": $escaped <br/>
+". get_string('total', 'tool_resetpasswords') ." : ".($generated+$escaped)."
 </div>";
+
+
+
+
+ 
+
+ 
  
 echo $OUTPUT->continue_button($returnurl);
-
-
-echo $OUTPUT->footer();
-
-
- 
+ echo $OUTPUT->footer();

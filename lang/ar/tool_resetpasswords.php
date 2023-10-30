@@ -23,13 +23,38 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+ defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'نغيير كلمة السر لمجموعة';
-$string['uploadusers'] = 'قم برفع الملف الخاص بالمستخدمين';
-$string['resetpasswords'] = 'إعادة تعيين كلمة المرور';
-$string['resetpasswords:bulkresetpassword'] = "Bulk reset password by CSV file upload" ;
-$string['examplecsv'] = "ملف كمثال" ;
-$string['examplecsv_help'] = "Upload CSV file with only on column for <b>username</b>, as found in this example file" ;
-$string['csvdelimiter'] = "CSV separator" ;
-$string['encoding'] = "التشفير" ;
+ $string['pluginname'] = 'اعادة ضبط كلمة المرور لمجموعة';
+ $string['taskname'] =  'اعادة ضبط كلمة المرور لمجموعة';
+ $string['action'] = 'ما تم عمله';
+ 
+ // form Strings
+ $string['uploadusers'] = 'رفع ملف المستخدمين';
+ $string['resetpasswords'] = 'اعادة ضبط كلمة المرور';
+ $string['resetpasswords:bulkresetpassword'] = "Bulk reset password by CSV file upload" ;
+ $string['examplecsv'] = "ملف كمثال" ;
+ $string['examplecsv_help'] = "قم برفع ملف CSV  يحتوي عمود واحد ل  <b>username</b>, كما هو موضح في ملف المثال" ;
+ $string['csvdelimiter'] = "CSV فاصل" ;
+ $string['encoding'] = "التشفير" ;
+
+ $string['password_cron'] =  "سيتم ارسال كلمة المرور في ال cron" ;
+ $string['usernotfound'] = "لم يتم العثور على هذا المستخدم";
+ $string['reseted_users'] =  "مستخدمين تم اعادة ضبط كلمة المرور لهم" ;
+ $string['escaped_users'] = " مستخدمين لم تكمل عمليتهم" ;
+ $string['total'] = "العدد الكلي";
+
+ 
+ /// Email Strings
+ $string['emailsubject'] = 'اعادة ضبط كلمة مرورك';
+ $string['emailsender'] = '{$a->siteshortname} Site Admin' ;
+ $string['emailbodyhtml'] ='<div dir = "rtl" style:"text-align:right"> أهلا {$a->userfullname} , <br/>
+ تم تغيير كلمة المرمر الخاصة بك في  <b> {$a->sitename} </b> بواسطة الموقع.
+ <br/> معلومات دخولك للموقع كالاتي:
+ <br/><br/>
+اسم المستخدم: {$a->username} <br/>
+ كلمة المرور: {$a->password} <br/><br/>
+ URL: {$a->URL}
+ </div>' ;
+ 
+ 

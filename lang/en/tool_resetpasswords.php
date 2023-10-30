@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Bulk rest password';
 $string['taskname'] = 'Bulk rest password';
+$string['action'] = 'Action';
 
 // form Strings
 $string['uploadusers'] = 'Bulk Reset Password';
@@ -36,6 +37,13 @@ $string['examplecsv'] = "Example CSV" ;
 $string['examplecsv_help'] = "Upload CSV file with only on column for <b>username</b>, as found in this example file" ;
 $string['csvdelimiter'] = "CSV separator" ;
 $string['encoding'] = "Encoding" ;
+
+$string['password_cron'] =  "Password is generated in cron " ;
+$string['usernotfound'] = " User not found";
+$string['reseted_users'] =  "Password reseted users" ;
+$string['escaped_users'] = "Escaped users" ;
+$string['total'] = "Total";
+
 
 /// Email Strings
 $string['emailsubject'] = 'User account password reset';
