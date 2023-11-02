@@ -22,11 +22,14 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_resetpasswords\task ;
+namespace tool_resetpasswords\task;
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/lib.php');   
+require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/lib.php');
 
+/**
+ * Class for bulk password reset
+ */
 class bulkreset_passwords extends \core\task\scheduled_task {
 
     /**
@@ -43,23 +46,23 @@ class bulkreset_passwords extends \core\task\scheduled_task {
      */
     public function execute() {
         global $DB;
-        if ($DB->count_records('user_preferences', array('name' => 'bulk_resetpassword', 'value' => '1'))) {
-          mtrace('Creating passwords for new users...');
-          $userfieldsapi = \core_user\fields::for_name();
-          $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
-          $cusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, $usernamefields, u.username
+        if ($DB->count_records('user_preferences', ['name' => 'bulk_resetpassword', 'value' => '1'])) {
+            mtrace('Creating passwords for new users...');
+            $userfieldsapi = \core_user\fields::for_name();
+            $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
+            $cusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, $usernamefields, u.username
                                               FROM {user} u
                                               JOIN {user_preferences} p ON u.id=p.userid
                                               WHERE p.name='bulk_resetpassword' AND p.value='1' AND
                                                     u.email !='' AND u.suspended = 0 AND
                                                     u.auth != 'nologin' AND u.deleted = 0");
 
-          foreach ($cusers as $cuser) {
-            reset_password_sendmail($cuser);  
-          }
-          $cusers->close();
-        }else{
-          mtrace('No bulk password reset is needed!');
+            foreach ($cusers as $cuser) {
+                reset_password_sendmail($cuser);
+            }
+            $cusers->close();
+        } else {
+            mtrace('No bulk password reset is needed!');
         }
     }
 

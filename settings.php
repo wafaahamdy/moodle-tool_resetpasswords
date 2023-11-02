@@ -23,7 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-//used to display link in admin page under accounts category
 $ADMIN->add('accounts', new admin_externalpage('tool_resetpasswords'
   , get_string('pluginname', 'tool_resetpasswords'), "$CFG->wwwroot/$CFG->admin/tool/resetpasswords/index.php"
-  ,'tool/resetpasswords:bulkresetpassword'));
+  , 'tool/resetpasswords:bulkresetpassword'));

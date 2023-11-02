@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_resetpasswords';
 $plugin->release = '0.1.0';
-$plugin->version = 2023103100;
+$plugin->version = 2023103105;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;

@@ -21,31 +21,30 @@
  * @copyright   2023 Wafaa Hamdy <eng.wafaa.hamdy@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
- defined('MOODLE_INTERNAL') || die();
 
 
-function reset_password_sendmail($cuser){
-  global $SITE , $CFG , $DB;
- 
-  $emailsubject = get_string('emailsubject','tool_resetpasswords');
-  $emailsender = get_string('emailsender','tool_resetpasswords',['siteshortname'=>$SITE->shortname]); 
-  $password =generate_password(10) ; 
-  $cuser->password = $password ;
-  user_update_user($cuser , true);
+/**
+ * function to reset user password and send mail
+ * @param stdClass $cuser
+ * @return void
+ */
+function reset_password_sendmail($cuser) {
+    global $SITE , $CFG , $DB;
+    $emailsubject = get_string('emailsubject', 'tool_resetpasswords');
+    $emailsender = get_string('emailsender', 'tool_resetpasswords', ['siteshortname' => $SITE->shortname]);
+    $password = generate_password(10);
+    $cuser->password = $password;
+    user_update_user($cuser , true);
 
-  $mailbody =  get_string('emailbodyhtml','tool_resetpasswords',[
-    'userfullname' => $cuser->firstname . ' ' . $cuser->lastname ,
-    'username'=> $cuser->username,
+    $mailbody = get_string('emailbodyhtml', 'tool_resetpasswords', [
+    'userfullname' => $cuser->firstname . ' ' . $cuser->lastname,
+    'username' => $cuser->username,
     'password' => $password,
     'URL' => $CFG->wwwroot . '/login/index.php',
-    'sitename' => $SITE->fullname
-    ]); 
- 
-  email_to_user($cuser, $emailsender, $emailsubject, $mailbody,false);
-  set_user_preference('auth_forcepasswordchange',1, $cuser);
-  unset_user_preference('bulk_resetpassword', $cuser);
- 
-}
+    'sitename' => $SITE->fullname,
+    ]);
+    email_to_user($cuser, $emailsender, $emailsubject, $mailbody, false);
+    set_user_preference('auth_forcepasswordchange', 1, $cuser);
+    unset_user_preference('bulk_resetpassword', $cuser);
 
- 
+}

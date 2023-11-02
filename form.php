@@ -24,11 +24,18 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir.'/formslib.php';
+require_once($CFG->libdir.'/formslib.php');
 
 
+/**
+ * class to intiate bulk reset password form
+ */
 class upload_list_form extends moodleform {
-    function definition () {
+    /**
+     * function definition
+     * @return void
+     */
+    public function definition () {
         $mform = $this->_form;
         $mform->addElement('header', 'settingsheader', get_string('upload'));
 
@@ -39,10 +46,9 @@ class upload_list_form extends moodleform {
 
         $mform->addElement('filepicker', 'userfile', get_string('file'));
         $mform->addRule('userfile', null, 'required');
-
         $choices = csv_import_reader::get_delimiter_list();
         $mform->addElement('select', 'delimiter_name', get_string('csvdelimiter', 'tool_resetpasswords'), $choices);
-       
+
         if (array_key_exists('cfg', $choices)) {
             $mform->setDefault('delimiter_name', 'cfg');
         } else if (get_string('listsep', 'langconfig') == ';') {
@@ -57,7 +63,5 @@ class upload_list_form extends moodleform {
 
         $this->add_action_buttons(false, get_string('resetpasswords', 'tool_resetpasswords'));
     }
-
- 
 }
 
