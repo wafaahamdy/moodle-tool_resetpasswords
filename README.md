@@ -1,8 +1,13 @@
 # Bulk rest password #
 
-TODO Describe the plugin shortly here.
+A tool to bulk reset users passwords by uploading CSV files.
 
-TODO Provide more detailed description here.
+After installing the plugin
+-- A link is added under site administration/users/ accounts
+-- Upload CSV file with one column with header "username"
+-- A scheduled task is used to reset password and send mail to users
+-- The tool is granted on system context by default to admin and manager.
+-- a permission can be given to any role
 
 ## Installing via uploaded ZIP file ##
 
