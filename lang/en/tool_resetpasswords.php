@@ -48,7 +48,7 @@ $string['emailsubject'] = 'User account password reset';
 $string['emailsender'] = '{$a->siteshortname} Site Admin' ;
 $string['emailbodyhtml'] ='<div> Hi {$a->userfullname} , <br/>
 Your user account password at <b> {$a->sitename} </b> has been reset by admin.
-<br/> Your current login information is now:
+<br/> Your current login information is:
 <br/><br/>
 Username: {$a->username} <br/>
 Password: {$a->password} <br/><br/>

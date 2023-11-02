@@ -22,9 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// this file is used to add a scheduled task for handling reset and send email process
-
- defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die();
 
 $tasks = array(
     array(

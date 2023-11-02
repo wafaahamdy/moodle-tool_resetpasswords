@@ -23,9 +23,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-//add a capability that could be assigned to any role and it works only on sysetem level and 
-// is by default added to admin and amanager roles 
- 
+
 $capabilities = [
     'tool/resetpasswords:bulkresetpassword' => [
         'riskbitmask' => RISK_SPAM,
