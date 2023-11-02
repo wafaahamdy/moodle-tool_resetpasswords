@@ -22,10 +22,6 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- // this is a class to add scheduled task functionality for the process
-
- // we should add a namaspace related to the plugin
-
 namespace tool_resetpasswords\task ;
 
 defined('MOODLE_INTERNAL') || die();
