@@ -1,6 +1,6 @@
 # Bulk rest password #
 
-This plugin enables admins to bulk reset users password and send password to users by email. Users will be forced to reset password with first login.
+This plugin enables admins (or any one with permission) to bulk reset users password and send password to users by email. Force password change will be set for those users.
 
 The process starts by uploading a CSV file with usernames to mark users who need password reset. A scheduled task is used to perform the process of resetting password and sending mail to users.
 
@@ -13,7 +13,7 @@ This permission is granted by default to admin & manager roles.
 The tool is available under _site administration -> users -> accounts -> Bulk reset password_
 
 ### Scheduled task ###
-Process scheduled task is tool_resetpasswords\task\bulkreset_passwords
+Process scheduled task is _tool_resetpasswords\task\bulkreset_passwords_
 
 
 ## Installing via uploaded ZIP file ##
