@@ -21,32 +21,35 @@
  * @copyright   2023 Wafaa Hamdy <eng.wafaa.hamdy@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_resetpasswords\form;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/formslib.php');
+
+require_once("$CFG->libdir/formslib.php");
 
 
 /**
  * class to intiate bulk reset password form
  */
-class upload_list_form extends moodleform {
+    class uploadlistform extends  \moodleform {
     /**
      * function definition
      * @return void
      */
     public function definition () {
+ 
         $mform = $this->_form;
         $mform->addElement('header', 'settingsheader', get_string('upload'));
 
-        $url = new moodle_url('example.csv');
-        $link = html_writer::link($url, 'example.csv');
+        $url = new \moodle_url('example.csv');
+        $link = \html_writer::link($url, 'example.csv');
         $mform->addElement('static', 'examplecsv', get_string('examplecsv', 'tool_resetpasswords'), $link);
         $mform->addHelpButton('examplecsv', 'examplecsv', 'tool_resetpasswords');
 
         $mform->addElement('filepicker', 'userfile', get_string('file'));
         $mform->addRule('userfile', null, 'required');
-        $choices = csv_import_reader::get_delimiter_list();
+        $choices = \csv_import_reader::get_delimiter_list();
         $mform->addElement('select', 'delimiter_name', get_string('csvdelimiter', 'tool_resetpasswords'), $choices);
 
         if (array_key_exists('cfg', $choices)) {
@@ -57,7 +60,7 @@ class upload_list_form extends moodleform {
             $mform->setDefault('delimiter_name', 'comma');
         }
 
-        $choices = core_text::get_encodings();
+        $choices = \core_text::get_encodings();
         $mform->addElement('select', 'encoding', get_string('encoding', 'tool_resetpasswords'), $choices);
         $mform->setDefault('encoding', 'UTF-8');
 
