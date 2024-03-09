@@ -32,13 +32,12 @@ require_once("$CFG->libdir/formslib.php");
 /**
  * class to intiate bulk reset password form
  */
-    class uploadlistform extends  \moodleform {
+class uploadlistform extends  \moodleform {
     /**
      * function definition
      * @return void
      */
     public function definition () {
- 
         $mform = $this->_form;
         $mform->addElement('header', 'settingsheader', get_string('upload'));
 
@@ -67,4 +66,3 @@ require_once("$CFG->libdir/formslib.php");
         $this->add_action_buttons(false, get_string('resetpasswords', 'tool_resetpasswords'));
     }
 }
-

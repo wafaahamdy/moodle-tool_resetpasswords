@@ -25,7 +25,6 @@
 require('../../../config.php');
 require_once($CFG->libdir.'/csvlib.class.php');
 require_once($CFG->libdir."/moodlelib.php");
-//require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/form.php');
 
 require_login();
 $systemcontext = context_system::instance();
@@ -47,12 +46,9 @@ echo $OUTPUT->heading(get_string('pluginname', 'tool_resetpasswords'));
 $returnurl = new moodle_url('/admin/tool/resetpasswords/index.php');
 $iid = optional_param('iid', '', PARAM_INT);
 
-
-
 if (empty($iid)) {
-   
-    //$mform1 = new tool_resetpasswords_uploadlistform();
-    $mform1 = new \tool_resetpasswords\form\uploadlistform() ;
+
+    $mform1 = new \tool_resetpasswords\form\uploadlistform();
     if ($formdata = $mform1->get_data()) {
         $iid = csv_import_reader::get_new_iid('uploaduser');
         $cir = new csv_import_reader($iid, 'uploaduser');
