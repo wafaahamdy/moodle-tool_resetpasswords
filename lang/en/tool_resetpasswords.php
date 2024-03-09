@@ -23,8 +23,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Bulk rest password';
-$string['taskname'] = 'Bulk rest password';
+$string['pluginname'] = 'Bulk reset password';
+$string['taskname'] = 'Bulk reset password';
 $string['action'] = 'Action';
 
 // Form Strings.
@@ -54,4 +54,8 @@ Username: {$a->username} <br/>
 Password: {$a->password} <br/><br/>
 URL: {$a->URL}
 </div>';
+
+// privacy
+$string['privacy:metadata'] = 'Reset password plugin does not store any data about users.';
+
 
