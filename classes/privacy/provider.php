@@ -21,11 +21,6 @@
  * @copyright   2023 Wafaa Hamdy <eng.wafaa.hamdy@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tool_resetpasswords\privacy;
-
-// This plugin does not store any personal user data.
-
 class provider implements \core_privacy\local\metadata\null_provider {
 
     /**

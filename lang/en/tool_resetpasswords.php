@@ -55,7 +55,7 @@ Password: {$a->password} <br/><br/>
 URL: {$a->URL}
 </div>';
 
-// privacy
+// Privacy Strings.
 $string['privacy:metadata'] = 'Reset password plugin does not store any data about users.';
 
 
