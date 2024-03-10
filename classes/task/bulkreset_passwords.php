@@ -25,7 +25,6 @@
 namespace tool_resetpasswords\task;
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/resetpasswords/lib.php');
 
 /**
  * Class for bulk password reset
@@ -47,7 +46,7 @@ class bulkreset_passwords extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
         if ($DB->count_records('user_preferences', ['name' => 'bulk_resetpassword', 'value' => '1'])) {
-            mtrace('Creating passwords for new users...');
+            mtrace('Creating passwords for required users...');
             $userfieldsapi = \core_user\fields::for_name();
             $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
             $cusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, $usernamefields, u.username
@@ -58,7 +57,8 @@ class bulkreset_passwords extends \core\task\scheduled_task {
                                                     u.auth != 'nologin' AND u.deleted = 0");
 
             foreach ($cusers as $cuser) {
-                reset_password_sendmail($cuser);
+                $useraction = new \tool_resetpasswords\rest_sendmail($cuser);
+                $useraction->performreset();
             }
             $cusers->close();
         } else {

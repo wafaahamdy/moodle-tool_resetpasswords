@@ -28,7 +28,7 @@ $tasks = [
     [
         'classname' => 'tool_resetpasswords\task\bulkreset_passwords',
         'blocking' => 0,
-        'minute' => '*',
+        'minute' => '*/15',
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
