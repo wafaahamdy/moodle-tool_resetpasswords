@@ -39,6 +39,8 @@ if ($USER->id) {
 
 
 $PAGE->set_title(get_string('pluginname', 'tool_resetpasswords'));
+$PAGE->set_url(new moodle_url('/admin/tool/resetpasswords/index.php'));
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('pluginname', 'tool_resetpasswords'));
 
