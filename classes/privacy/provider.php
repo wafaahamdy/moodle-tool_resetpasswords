@@ -21,6 +21,11 @@
  * @copyright   2023 Wafaa Hamdy <eng.wafaa.hamdy@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_resetpasswords\privacy;
+
+/**
+ * Privacy Subsystem for tool_resetpasswords implementing null_provider.
+ */
 class provider implements \core_privacy\local\metadata\null_provider {
 
     /**
