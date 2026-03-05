@@ -45,7 +45,10 @@ class bulkreset_passwords extends \core\task\scheduled_task {
      */
     public function execute() {
         global $DB;
-        if ($DB->count_records('user_preferences', ['name' => 'bulk_resetpassword', 'value' => '1'])) {
+        $sql = "SELECT COUNT(*) FROM {user_preferences} WHERE " . 
+               $DB->sql_compare_text('name') . " = ? AND " . 
+               $DB->sql_compare_text('value') . " = ?";
+        if ($DB->count_records_sql($sql, array('bulk_resetpassword', '1'))) {
             mtrace('Creating passwords for required users...');
             $userfieldsapi = \core_user\fields::for_name();
             $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;

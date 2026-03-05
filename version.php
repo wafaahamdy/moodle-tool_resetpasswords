@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_resetpasswords';
-$plugin->release = '0.1.0';
-$plugin->version = 2024031005;
-$plugin->requires = 2022112800;
+$plugin->release = '0.1.1';
+$plugin->version = 2026030501;
+$plugin->requires = 2025012400.00; // Moodle 5.0.
 $plugin->maturity = MATURITY_STABLE;
