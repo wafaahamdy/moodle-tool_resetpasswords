@@ -37,7 +37,7 @@ class uploadlistform extends  \moodleform {
      * function definition
      * @return void
      */
-    public function definition () {
+    public function definition() {
         $mform = $this->_form;
         $mform->addElement('header', 'settingsheader', get_string('upload'));
 

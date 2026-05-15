@@ -24,8 +24,6 @@
 
 namespace tool_resetpasswords\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class for bulk password reset
  */

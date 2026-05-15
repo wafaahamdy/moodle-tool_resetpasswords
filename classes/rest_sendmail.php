@@ -24,6 +24,10 @@
 
 namespace tool_resetpasswords;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot.'/user/lib.php');
+
 /**
  * Class to manage change and email process
  */
@@ -43,6 +47,7 @@ class rest_sendmail {
      * @param stdClass $cuser
      */
     public function __construct($cuser) {
+        global $SITE;
         $this->cuser = $cuser;
         $this->emailsubject = get_string('emailsubject', 'tool_resetpasswords');
         $this->emailsender = get_string('emailsender', 'tool_resetpasswords', ['siteshortname' => $SITE->shortname]);
